@@ -1,0 +1,6 @@
+@WatchRate.API_HostAddress = http://localhost:5189
+
+GET {{WatchRate.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
