@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchRate.Application", "WatchRate.Application\WatchRate.Application.csproj", "{E4795442-C9C9-490C-9F1E-B6020E3FADFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchRate.Contracts", "WatchRate.Contracts\WatchRate.Contracts.csproj", "{B0E715D2-07B1-4766-B9E4-4060B9AB7D11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,5 +25,9 @@ Global
 		{E4795442-C9C9-490C-9F1E-B6020E3FADFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4795442-C9C9-490C-9F1E-B6020E3FADFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4795442-C9C9-490C-9F1E-B6020E3FADFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0E715D2-07B1-4766-B9E4-4060B9AB7D11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0E715D2-07B1-4766-B9E4-4060B9AB7D11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0E715D2-07B1-4766-B9E4-4060B9AB7D11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0E715D2-07B1-4766-B9E4-4060B9AB7D11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
