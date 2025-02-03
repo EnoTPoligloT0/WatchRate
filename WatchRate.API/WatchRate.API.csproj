@@ -18,4 +18,10 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\WatchRate.Application\WatchRate.Application.csproj" />
+      <ProjectReference Include="..\WatchRate.Contracts\WatchRate.Contracts.csproj" />
+      <ProjectReference Include="..\WatchRate.Infrastucture\WatchRate.Infrastucture.csproj" />
+    </ItemGroup>
+
 </Project>
