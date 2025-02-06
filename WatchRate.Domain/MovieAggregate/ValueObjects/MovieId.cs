@@ -11,7 +11,7 @@ public sealed class MovieId : ValueObject, IEntityId<MovieId, Guid>
         Value = value;
     }
     
-    public static MovieId CreateUnique() => new(Guid.NewGuid());
+    public static MovieId CreateUnique() => new MovieId(Guid.NewGuid());
     public static MovieId Create(Guid value) => new(value);
     
     protected override IEnumerable<object> GetEqualityComponents()
