@@ -8,17 +8,17 @@ namespace WatchRate.Domain.UserAggregate.Entities;
 public class UserWatchlist : Entity<UserWatchlistId>
 {
     public MovieId MovieId { get; private set; }
-    public DateTime AddedDateTime { get; private set; }
+    public DateTime CreatedDateTime { get; private set; }
 
-    private UserWatchlist(UserWatchlistId userWatchlistId, MovieId movieId, DateTime addedDateTime)
+    private UserWatchlist(UserWatchlistId userWatchlistId, MovieId movieId, DateTime createdDateTime)
     : base(userWatchlistId)
     {
         MovieId = movieId;
-        AddedDateTime = addedDateTime;
+        CreatedDateTime = createdDateTime;
     }
 
-    public static UserWatchlist Create(MovieId movieId, DateTime addedDateTime)
+    public static UserWatchlist Create(MovieId movieId, DateTime createdDateTime)
     {
-        return new UserWatchlist(UserWatchlistId.CreateUnique(), movieId, addedDateTime);
+        return new UserWatchlist(UserWatchlistId.CreateUnique(), movieId, DateTime.Now);
     }
 }
