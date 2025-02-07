@@ -17,7 +17,7 @@ public class UserFavorite : Entity<UserFavoriteId>
         AddedDateTime = addedDateTime;
     }
 
-    public static UserFavorite CreateInstance(MovieId movieId, DateTime addedDateTime)
+    public static UserFavorite Create(MovieId movieId, DateTime addedDateTime)
     {
         return new UserFavorite(UserFavoriteId.CreateUnique(), movieId, addedDateTime);
     }
