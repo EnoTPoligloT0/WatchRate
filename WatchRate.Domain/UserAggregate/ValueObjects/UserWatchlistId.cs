@@ -3,7 +3,6 @@ namespace WatchRate.Domain.UserAggregate.ValueObjects;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchRate.Domain.Common.Attributes;
 using WatchRate.Domain.Common.Models;
-using WatchRate.Domain.StreamingAggregate.ValueObjects;
 
 
 [EfCoreValueConverter(typeof(UserWatchlistIdValueConverter))]
