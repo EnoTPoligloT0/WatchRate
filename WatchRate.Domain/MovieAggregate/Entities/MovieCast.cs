@@ -6,10 +6,10 @@ namespace WatchRate.Domain.MovieAggregate.Entities;
 public class MovieCast : Entity<MovieCastId>
 {
     public PersonId PersonId { get; set; }
-    public string Character { get; set; }
-    public string Order { get; set; }
+    public string? Character { get; set; }
+    public string? Order { get; set; }
 
-    private MovieCast(MovieCastId movieCastId, PersonId personId, string character, string order)
+    private MovieCast(MovieCastId movieCastId, PersonId personId, string? character, string? order)
         : base(movieCastId)
     {
         PersonId = personId;
