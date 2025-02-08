@@ -1,0 +1,887 @@
+using WatchRate.Domain.Common.Models;
+using WatchRate.Domain.MovieAggregate.ValueObjects;
+using WatchRate.Domain.StreamingAggregate;
+using WatchRate.Domain.StreamingAggregate.ValueObjects;
+
+namespace WatchRate.Domain.MovieAggregate;
+
+public class Movie : AggregateRoot<MovieId>
+{
+    // private readonly List<Genre> _genres = new();
+    // private readonly List<MovieCast> _cast = new();
+    // private readonly List<MovieCrew> _crew = new();
+    // private readonly List<StreamingUrl> _streamingUrls = new();
+
+    public string? DbId { get; protected set; }
+    public string Title { get; protected set; } = null!;
+    public string Description { get; protected set; } = null!;
+    public short Year { get; protected set; }
+    public DateTime? ReleaseDate { get; protected set; }
+    public short? Runtime { get; protected set; }
+    public MaturityRating? MaturityRating { get; protected set; }
+    public decimal AverageRating { get; protected set; }
+    public int? TotalRatings { get; private set; }
+    public string? PosterUrl { get; private set; }
+    public string? BackdropUrl { get; private set; }
+    public string? TrailerUrl { get; private set; }
+
+    private readonly List<MovieCastId> _cast = new();
+    private readonly List<MovieCrewId> _crew = new();
+    private readonly List<MovieGenreId> _genres = new();
+    private readonly List<StreamingPlatformId> _streamingPlatforms = new();
+
+    public IReadOnlyList<MovieCastId> Cast => _cast.AsReadOnly();
+    public IReadOnlyList<MovieCrewId> Crew => _crew.AsReadOnly();
+    public IReadOnlyList<MovieGenreId> Genres => _genres.AsReadOnly();
+    public IReadOnlyList<StreamingPlatformId> StreamingPlatforms => _streamingPlatforms.AsReadOnly();
+
+    public Movie(MovieId movieId,
+        string title,
+        string description,
+        short year,
+        DateTime? releaseDate,
+        short? runtime,
+        MaturityRating maturityRating) : base(movieId)
+    {
+        Title = title;
+        Description = description;
+        Year = year;
+        ReleaseDate = releaseDate;
+        Runtime = runtime;
+        MaturityRating = maturityRating;
+    }
+
+    public static Movie Create(
+        MovieId.CreateUnique(),
+        string title,
+        string description,
+        short year,
+        DateTime? releaseDate,
+        short? runtime,
+        MaturityRating maturityRating)
+    {
+        
+    }
+
+    public void AddCastMember(MovieCastId castId) => _cast.Add(castId);
+
+    public void RemoveCastMember(MovieCastId castId) => _cast.Remove(castId);
+
+    public void AddCrewMember(MovieCrewId crewId) => _crew.Add(crewId);
+
+    public void RemoveCrewMember(MovieCrewId crewId) => _crew.Remove(crewId);
+
+    public void AddGenre(GenreId genreId) => _genreIds.Add(genreId);
+
+    public void RemoveGenre(GenreId genreId) => _genreIds.Remove(genreId);
+
+    public void AddStreamingPlatform(StreamingPlatformId platformId) => _streamingPlatformIds.Add(platformId);
+
+    public void RemoveStreamingPlatform(StreamingPlatformId platformId) => _streamingPlatformIds.Remove(platformId);
+
+    public void UpdateRating(decimal newRating, int totalRatings)
+    {
+        AverageRating = newRating;
+        TotalRatings = totalRatings;
+    }
+}
+
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using WatchRate.Domain.Common.Attributes;
+using WatchRate.Domain.Common.Models;
+using WatchRate.Domain.StreamingAggregate.ValueObjects;
+
+namespace WatchRate.Domain.UserAggregate.ValueObjects;
+
+[EfCoreValueConverter(typeof(UserIdValueConverter))]
+public class UserId : ValueObject, IEntityId<UserId, Guid>
+{
+    public Guid Value { get; }
+    
+    public UserId(Guid value)
+    {
+        Value = value;
+    }
+    
+    public static UserId CreateUnique() => new(Guid.NewGuid());
+
+    public static UserId Create(Guid value) => new(value);
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+    public class UserIdValueConverter : ValueConverter<UserId, Guid>
+    {
+        public UserIdValueConverter()
+            : base(
+                id => id.Value,
+                value => Create(value)
+            ) { }
+    }
+    
+}
+
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using WatchRate.Domain.Common.Attributes;
+using WatchRate.Domain.Common.Models;
+
+namespace WatchRate.Domain.StreamingAggregate.ValueObjects;
+
+[EfCoreValueConverter(typeof(StreamingPlatformIdValueConverter))]
+public class StreamingPlatformId : ValueObject, IEntityId<StreamingPlatformId, Guid>
+{
+    public Guid Value { get; }
+
+    private StreamingPlatformId(Guid value)
+    {
+        Value = value;
+    }
+
+    public static StreamingPlatformId CreateUnique() => new (Guid.NewGuid());
+    public static StreamingPlatformId Create(Guid value) => new(value);
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+    
+    public class StreamingPlatformIdValueConverter : ValueConverter<StreamingPlatformId, Guid>
+    {
+        public StreamingPlatformIdValueConverter()
+            : base(
+                id => id.Value,
+                value => Create(value)
+            ) { }
+    }
+}
+
+using WatchRate.Domain.Common.Models;
+
+namespace WatchRate.Domain.RatingAggregate.ValueObjects;
+
+public class RatingId : ValueObject, IEntityId<RatingId, Guid>
+{
+    public Guid Value { get; }
+
+    public RatingId(Guid value)
+    {
+        Value = value;
+    }
+    
+    public static RatingId CreateUnique()
+    {
+        return new RatingId(Guid.NewGuid());
+    }
+
+    public static RatingId Create(Guid value)
+    {
+        return new RatingId(value);
+    }
+    
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+}
+
+using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using WatchRate.Domain.Common.Attributes;
+using WatchRate.Domain.Common.Models;
+
+namespace WatchRate.Domain.PersonAggregate.ValueObjects;
+
+[EfCoreValueConverter(typeof(PersonIdValueConverter))]
+public class PersonId : ValueObject, IEntityId<PersonId, Guid>
+{
+    public Guid Value { get; }
+
+    public PersonId(Guid value)
+    {
+        Value = value;
+    }
+    
+    public static PersonId CreateUnique() => new PersonId(Guid.NewGuid());
+
+    public static PersonId Create(Guid value) => new(value);
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+
+    public class PersonIdValueConverter : ValueConverter<PersonId, Guid>
+    {
+        public  PersonIdValueConverter () : 
+            base(
+                id => id.Value,
+                value => Create(value)
+                ){}
+    }
+    
+}
+
+using WatchRate.Domain.Common.Models;
+using WatchRate.Domain.MovieAggregate.ValueObjects;
+
+namespace WatchRate.Domain.MovieAggregate;
+
+public class MovieGenre : AggregateRoot<MovieGenreId>
+{
+    
+}
+
+using WatchRate.Domain.Common.Models;
+using WatchRate.Domain.MovieAggregate.ValueObjects;
+
+namespace WatchRate.Domain.MovieAggregate;
+
+public class MovieCrew : AggregateRoot<MovieCrewId>
+{
+    
+}
+
+namespace WatchRate.Domain.MovieAggregate;
+
+public class MovieCast
+{
+    
+}
+
+using WatchRate.Domain.Common.Models;
+using WatchRate.Domain.MovieAggregate.ValueObjects;
+using WatchRate.Domain.StreamingAggregate;
+using WatchRate.Domain.StreamingAggregate.ValueObjects;
+
+namespace WatchRate.Domain.MovieAggregate;
+
+public class Movie : AggregateRoot<MovieId>
+{
+    // private readonly List<Genre> _genres = new();
+    // private readonly List<MovieCast> _cast = new();
+    // private readonly List<MovieCrew> _crew = new();
+    // private readonly List<StreamingUrl> _streamingUrls = new();
+
+    public string? DbId { get; protected set; }
+    public string Title { get; protected set; } = null!;
+    public string Description { get; protected set; } = null!;
+    public short Year { get; protected set; }
+    public DateTime? ReleaseDate { get; protected set; }
+    public short? Runtime { get; protected set; }
+    public MaturityRating? MaturityRating { get; protected set; }
+    public decimal AverageRating { get; protected set; }
+    public int? TotalRatings { get; private set; }
+    public string? PosterUrl { get; private set; }
+    public string? BackdropUrl { get; private set; }
+    public string? TrailerUrl { get; private set; }
+
+    private readonly List<MovieCastId> _cast = new();
+    private readonly List<MovieCrewId> _crew = new();
+    private readonly List<MovieGenreId> _genres = new();
+    private readonly List<StreamingPlatformId> _streamingPlatforms = new();
+
+    public IReadOnlyList<MovieCastId> Cast => _cast.AsReadOnly();
+    public IReadOnlyList<MovieCrewId> Crew => _crew.AsReadOnly();
+    public IReadOnlyList<MovieGenreId> Genres => _genres.AsReadOnly();
+    public IReadOnlyList<StreamingPlatformId> StreamingPlatforms => _streamingPlatforms.AsReadOnly();
+
+    public Movie(MovieId movieId,
+        string title,
+        string description,
+        short year,
+        DateTime? releaseDate,
+        short? runtime,
+        MaturityRating maturityRating) : base(movieId)
+    {
+        Title = title;
+        Description = description;
+        Year = year;
+        ReleaseDate = releaseDate;
+        Runtime = runtime;
+        MaturityRating = maturityRating;
+    }
+
+    public static Movie Create(
+        MovieId.CreateUnique(),
+        string title,
+        string description,
+        short year,
+        DateTime? releaseDate,
+        short? runtime,
+        MaturityRating maturityRating)
+    {
+        
+    }
+
+    public void AddCastMember(MovieCastId castId) => _cast.Add(castId);
+
+    public void RemoveCastMember(MovieCastId castId) => _cast.Remove(castId);
+
+    public void AddCrewMember(MovieCrewId crewId) => _crew.Add(crewId);
+
+    public void RemoveCrewMember(MovieCrewId crewId) => _crew.Remove(crewId);
+
+    public void AddGenre(GenreId genreId) => _genreIds.Add(genreId);
+
+    public void RemoveGenre(GenreId genreId) => _genreIds.Remove(genreId);
+
+    public void AddStreamingPlatform(StreamingPlatformId platformId) => _streamingPlatformIds.Add(platformId);
+
+    public void RemoveStreamingPlatform(StreamingPlatformId platformId) => _streamingPlatformIds.Remove(platformId);
+
+    public void UpdateRating(decimal newRating, int totalRatings)
+    {
+        AverageRating = newRating;
+        TotalRatings = totalRatings;
+    }
+}
+
+using WatchRate.Domain.Common.Models;
+
+namespace WatchRate.Domain.MovieAggregate.ValueObjects;
+
+public sealed class MovieId : ValueObject, IEntityId<MovieId, Guid>
+{
+    public Guid Value { get; }
+
+    private MovieId(Guid value)
+    {
+        Value = value;
+    }
+    
+    public static MovieId CreateUnique() => new MovieId(Guid.NewGuid());
+    public static MovieId Create(Guid value) => new(value);
+    
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+}
+
+using WatchRate.Domain.Common.Models;
+
+namespace WatchRate.Domain.MovieAggregate.ValueObjects;
+
+public class MovieGenreId : ValueObject, IEntityId<MovieGenreId, Guid> 
+{
+    public Guid Value { get; }
+
+    private MovieGenreId(Guid value)
+    {
+        Value = value;
+    }
+            
+    public static MovieGenreId CreateUnique() => new(Guid.NewGuid());
+    public static MovieGenreId Create(Guid value) => new(value);
+            
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+}
+
+using WatchRate.Domain.Common.Attributes;
+using WatchRate.Domain.Common.Models;
+
+namespace WatchRate.Domain.MovieAggregate.ValueObjects;
+
+[EfCoreValueConverter(typeof(MovieCrewId))]
+public class MovieCrewId : ValueObject, IEntityId<MovieCrewId, Guid>
+{
+    public Guid Value { get; }
+
+    private MovieCrewId(Guid value)
+    {
+        Value = value;
+    }
+
+    public static MovieCrewId CreateUnique() => new(Guid.NewGuid());
+    public static MovieCrewId Create(Guid value) => new(value);
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+}
+
+using WatchRate.Domain.Common.Attributes;
+using WatchRate.Domain.Common.Models;
+
+namespace WatchRate.Domain.MovieAggregate;
+
+[EfCoreValueConverter(typeof(MovieCastId))]
+public class MovieCastId : ValueObject, IEntityId<MovieCastId, Guid> 
+{
+    public Guid Value { get; }
+    public MovieCastId(Guid value)
+    {
+        Value = value;
+    }
+    
+    public static MovieCastId CreateUnique() => new(Guid.NewGuid());
+
+    public static MovieCastId Create(Guid value) => new(value);
+    
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+
+}
+
+namespace WatchRate.Domain.MovieAggregate.ValueObjects;
+public enum MaturityRating
+{
+    G,
+    PG,
+    PG13,
+    R,
+    NC17,
+    TVY,
+    TVY7,
+    TVG,
+    TVPG,
+    TV14,
+    TVMA
+}
+
+namespace WatchRate.Domain.Common.Models;
+
+public abstract class AggregateRoot<TId> : Entity<TId>, IHasTimestamps where TId : notnull
+{
+    public DateTime CreatedDateTime { get; set; }
+    
+    public DateTime UpdatedDateTime { get; set; }
+    
+    protected AggregateRoot()
+    {
+    }
+    
+    protected AggregateRoot(TId id) : base(id)
+    {
+        CreatedDateTime = DateTime.UtcNow;
+        UpdatedDateTime = DateTime.UtcNow;
+    }
+}
+
+namespace WatchRate.Domain.Common.Models;
+public abstract class ValueObject : IEquatable<ValueObject>
+{
+    protected abstract IEnumerable<object> GetEqualityComponents();
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+            return false;
+        
+        var other = (ValueObject)obj;
+        
+        return GetEqualityComponents()
+            .SequenceEqual(other.GetEqualityComponents());
+    }
+
+    public static bool operator ==(ValueObject left, ValueObject right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(ValueObject left, ValueObject right)
+    {
+        return !Equals(left, right);
+    }
+
+    public override int GetHashCode()
+    {
+        return GetEqualityComponents()
+            .Select(x => x?.GetHashCode() ?? 0)
+            .Aggregate((x, y) => x ^ y); 
+    }
+
+    public bool Equals(ValueObject? other)
+    {
+        return Equals((object?) other);
+    }
+}
+
+namespace WatchRate.Domain.Common.Models;
+
+public interface IEntityId<T, TValue> where T : IEntityId<T, TValue>
+{
+    TValue Value { get; }
+
+    static abstract T CreateUnique();
+    
+    static abstract T Create(TValue value);
+}
+
+
+namespace WatchRate.Domain.Common.Models;
+
+public abstract class Entity<TId> : IEquatable<Entity<TId>>
+    where TId : notnull
+{
+    public TId Id { get; protected set; }
+
+    protected Entity(TId id)
+    {
+        Id = id;
+    }
+    
+    public override bool Equals(object? obj)
+    {
+        return obj is Entity<TId> entity && Id.Equals(entity.Id);
+    }
+
+    public static bool operator ==(Entity<TId> left, Entity<TId> right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Entity<TId> left, Entity<TId> right)
+    {
+        return !left.Equals(right);
+    }
+
+    public bool Equals(Entity<TId>? other)
+    {
+        return Equals((object?) other);
+    }
+
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
+    
+#pragma warning disable CS8618
+    protected Entity()
+#pragma warning restore CS8618
+    {
+    }
+
+}
+
+namespace WatchRate.Domain.Common.Attributes;
+
+
+public class EfCoreValueConverterAttribute : Attribute
+{
+    public EfCoreValueConverterAttribute(Type valueConverter)
+    {
+        ValueConverter = valueConverter;
+    }
+
+    public Type ValueConverter { get; }
+}
+
+# Domain Model for MovieRate Platform
+
+## Aggregates
+
+### 1. Movie Aggregate
+
+Root: Movie
+
+```json
+{
+  "id": {
+    "value": "00000000-0000-0000-0000-000000000000"
+  },
+  "dbid": {
+    "value": "tt000000"
+  },
+  "title": "The Shawshank Redemption",
+  "description": "Two imprisoned men bond over a number of years...",
+  "year": 1994,
+  "runtime": 142,
+  "maturityRating": "R",
+  "averageRating": 9.3,
+  "posterUrl": "https://...",
+  "backdropUrl": "https://...",
+  "trailerUrl": "https://...",
+  "streamingUrls": [
+    {
+      "platform": "Netflix",
+      "url": "https://..."
+    }
+  ],
+  "genres": [
+    {
+      "id": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "name": "Drama"
+    }
+  ],
+  "cast": [
+    {
+      "id": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "personId": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "character": "Andy Dufresne",
+      "order": 1
+    }
+  ],
+  "crew": [
+    {
+      "id": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "personId": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "role": "Director",
+      "department": "Directing"
+    }
+  ],
+  "createdDateTime": "2024-01-01T00:00:00.0000000Z",
+  "updatedDateTime": "2024-01-01T00:00:00.0000000Z"
+}
+```
+
+### 2. Person Aggregate
+
+Root: Person
+
+```json
+{
+  "id": {
+    "value": "00000000-0000-0000-0000-000000000000"
+  },
+  "name": "Tim Robbins",
+  "biography": "Born in West Covina, California...",
+  "birthDate": "1958-10-16T00:00:00.0000000Z",
+  "birthPlace": "West Covina, California, USA",
+  "profileImageUrl": "https://...",
+  "createdDateTime": "2024-01-01T00:00:00.0000000Z",
+  "updatedDateTime": "2024-01-01T00:00:00.0000000Z"
+}
+```
+
+### 3. User Aggregate
+
+Root: User
+
+```json
+{
+  "id": {
+    "value": "00000000-0000-0000-0000-000000000000"
+  },
+  "email": "user@example.com",
+  "username": "moviefan123",
+  "passwordHash": "hashedPassword",
+  "profilePictureUrl": "https://...",
+  "watchlist": [
+    {
+      "id": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "movieId": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "addedDateTime": "2024-01-01T00:00:00.0000000Z"
+    }
+  ],
+  "favorites": [
+    {
+      "id": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "movieId": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "addedDateTime": "2024-01-01T00:00:00.0000000Z"
+    }
+  ],
+  "ratings": [
+    {
+      "id": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "movieId": {
+        "value": "00000000-0000-0000-0000-000000000000"
+      },
+      "value": 9,
+      "review": "One of the best movies ever made...",
+      "createdDateTime": "2024-01-01T00:00:00.0000000Z",
+      "updatedDateTime": "2024-01-01T00:00:00.0000000Z"
+    }
+  ],
+  "createdDateTime": "2024-01-01T00:00:00.0000000Z",
+  "updatedDateTime": "2024-01-01T00:00:00.0000000Z"
+}
+```
+
+## Value Objects
+
+### Common
+
+- MovieId
+- PersonId
+- UserId
+- RatingId
+- WatchlistItemId
+- FavoriteId
+- StreamingUrl
+- RatingValue (1-10)
+
+### Movie-specific
+
+- Genre
+- CastMember
+- CrewMember
+- MaturityRating
+
+## Domain Events
+
+### Movie
+
+- MovieCreated
+- MovieUpdated
+- MovieDeleted
+- MovieRatingUpdated
+
+### User
+
+- UserCreated
+- UserRatingAdded
+- UserRatingUpdated
+- UserRatingRemoved
+- MovieAddedToWatchlist
+- MovieRemovedFromWatchlist
+- MovieAddedToFavorites
+- MovieRemovedFromFavorites
+
+## Database Schema
+
+```sql
+-- Enum for Maturity Ratings
+CREATE TYPE maturity_rating AS ENUM ('G', 'PG', 'PG13', 'R', 'NC17');
+
+-- Movies Table
+CREATE TABLE Movies
+(
+    Id              UUID PRIMARY KEY,
+    ImdbId          TEXT            NOT NULL,
+    Title           TEXT            NOT NULL,
+    Description     TEXT,
+    Year            INT             NOT NULL,
+    ReleaseDate     DATE,
+    Runtime         INT,
+    MaturityRating  maturity_rating NOT NULL,
+    AverageRating   DECIMAL(3, 1),
+    TotalRatings    INT,
+    PosterUrl       TEXT,
+    BackdropUrl     TEXT,
+    TrailerUrl      TEXT,
+    CreatedDateTime TIMESTAMP       NOT NULL,
+    UpdatedDateTime TIMESTAMP       NOT NULL
+);
+
+-- Persons Table
+CREATE TABLE Persons
+(
+    Id              UUID PRIMARY KEY,
+    Name            TEXT      NOT NULL,
+    Biography       TEXT,
+    BirthDate       DATE,
+    BirthPlace      TEXT,
+    ProfileImageUrl TEXT,
+    CreatedDateTime TIMESTAMP NOT NULL,
+    UpdatedDateTime TIMESTAMP NOT NULL
+);
+
+-- Users Table
+CREATE TABLE Users
+(
+    Id                UUID PRIMARY KEY,
+    Email             TEXT      NOT NULL UNIQUE,
+    Username          TEXT      NOT NULL UNIQUE,
+    PasswordHash      TEXT      NOT NULL,
+    ProfilePictureUrl TEXT,
+    CreatedDateTime   TIMESTAMP NOT NULL,
+    UpdatedDateTime   TIMESTAMP NOT NULL
+);
+
+-- Genres Table
+CREATE TABLE Genres
+(
+    Id   UUID PRIMARY KEY,
+    Name TEXT NOT NULL UNIQUE
+);
+
+-- MovieCast Table
+CREATE TABLE MovieCast
+(
+    Id        UUID PRIMARY KEY,
+    MovieId   UUID NOT NULL REFERENCES Movies (Id) ON DELETE CASCADE,
+    PersonId  UUID NOT NULL REFERENCES Persons (Id) ON DELETE CASCADE,
+    Character TEXT NOT NULL,
+    "Order"   INT  NOT NULL
+);
+
+-- MovieCrew Table
+CREATE TABLE MovieCrew
+(
+    Id         UUID PRIMARY KEY,
+    MovieId    UUID NOT NULL REFERENCES Movies (Id) ON DELETE CASCADE,
+    PersonId   UUID NOT NULL REFERENCES Persons (Id) ON DELETE CASCADE,
+    Role       TEXT NOT NULL,
+    Department TEXT NOT NULL
+);
+
+-- MovieGenres Table
+CREATE TABLE MovieGenres
+(
+    MovieId UUID NOT NULL REFERENCES Movies (Id) ON DELETE CASCADE,
+    GenreId UUID NOT NULL REFERENCES Genres (Id) ON DELETE CASCADE,
+    PRIMARY KEY (MovieId, GenreId)
+);
+
+-- StreamingPlatforms Table
+CREATE TABLE StreamingPlatforms
+(
+    Id       UUID PRIMARY KEY,
+    MovieId  UUID NOT NULL REFERENCES Movies (Id) ON DELETE CASCADE,
+    Platform TEXT NOT NULL,
+    Url      TEXT NOT NULL
+);
+
+-- UserRatings Table
+CREATE TABLE UserRatings
+(
+    Id              UUID PRIMARY KEY,
+    UserId          UUID      NOT NULL REFERENCES Users (Id) ON DELETE CASCADE,
+    MovieId         UUID      NOT NULL REFERENCES Movies (Id) ON DELETE CASCADE,
+    Value           INT       NOT NULL CHECK (Value BETWEEN 1 AND 10),
+    Review          TEXT,
+    CreatedDateTime TIMESTAMP NOT NULL,
+    UpdatedDateTime TIMESTAMP NOT NULL,
+    UNIQUE (UserId, MovieId)
+);
+
+-- UserWatchlist Table
+CREATE TABLE UserWatchlist
+(
+    Id            UUID PRIMARY KEY,
+    UserId        UUID      NOT NULL REFERENCES Users (Id) ON DELETE CASCADE,
+    MovieId       UUID      NOT NULL REFERENCES Movies (Id) ON DELETE CASCADE,
+    AddedDateTime TIMESTAMP NOT NULL,
+    UNIQUE (UserId, MovieId)
+);
+
+-- UserFavorites Table
+CREATE TABLE UserFavorites
+(
+    Id            UUID PRIMARY KEY,
+    UserId        UUID      NOT NULL REFERENCES Users (Id) ON DELETE CASCADE,
+    MovieId       UUID      NOT NULL REFERENCES Movies (Id) ON DELETE CASCADE,
+    AddedDateTime TIMESTAMP NOT NULL,
+    UNIQUE (UserId, MovieId)
+);
+```
+
+I'll help you create comprehensive aggregates for your MovieRate platform using PostgreSQL, focusing on creating smart, interconnected models. I'll break this down into several key aggregates: Movie, Person, User, Rating, and Watchlist.
