@@ -6,9 +6,9 @@ namespace WatchRate.Domain.UserAggregate;
 
 public class User : AggregateRoot<UserId>
 {
-    private readonly List<UserWatchlistId> _userWatchlistIds = new();
-    private readonly List<UserFavoriteId> _userFavoriteIds = new();
-    private readonly List<UserRatingId> _userRatingIds = new();
+    private readonly List<UserWatchlist> _userWatchlists = new();
+    private readonly List<UserFavorite> _userFavorites = new();
+    private readonly List<UserRating> _userRatings = new();
 
     public string Email { get; set; }
     public string UserName { get; set; }
@@ -17,9 +17,9 @@ public class User : AggregateRoot<UserId>
     public DateTime CreatedDateTime { get; set; }
     public DateTime CreatedDate { get; set; }
 
-    public IReadOnlyList<UserWatchlistId> UserWatchlistIds => _userWatchlistIds.AsReadOnly();
-    public IReadOnlyList<UserFavoriteId> UserFavoriteIds => _userFavoriteIds.AsReadOnly();
-    public IReadOnlyList<UserRatingId> UserRatingIds => _userRatingIds.AsReadOnly();
+    public IReadOnlyList<UserWatchlist> UserWatchlists => _userWatchlists.AsReadOnly();
+    public IReadOnlyList<UserFavorite> UserFavorites => _userFavorites.AsReadOnly();
+    public IReadOnlyList<UserRating> UserRatings => _userRatings.AsReadOnly();
 
     private User(UserId userId,
         string email,

@@ -8,10 +8,10 @@ namespace WatchRate.Domain.MovieAggregate;
 
 public class Movie : AggregateRoot<MovieId>
 {
-    private readonly List<MovieGenreId> _genreIds = new();
-    private readonly List<MovieCastId> _castIds = new();
-    private readonly List<MovieCrewId> _crewIds = new();
-    private readonly List<StreamingPlatformId> _streamingPlatfomIds = new();
+    private readonly List<MovieGenre> _genres = new();
+    private readonly List<MovieCast> _cast = new();
+    private readonly List<MovieCrew> _crew = new();
+    private readonly List<StreamingPlatform> _streamingPlatfoms = new();
 
     public string? DbId { get; protected set; }
     public string Title { get; protected set; } = null!;
@@ -27,10 +27,10 @@ public class Movie : AggregateRoot<MovieId>
     public DateTime CreatedDateTime { get; protected set; }
     public DateTime? UpdatedDateTime { get; protected set; }
 
-    public IReadOnlyList<MovieGenreId> MovieGenreIds => _genreIds.AsReadOnly();
-    public IReadOnlyList<MovieCastId> MovieCastIds => _castIds.AsReadOnly();
-    public IReadOnlyList<MovieCrewId> MovieCrewIds => _crewIds.AsReadOnly();
-    public IReadOnlyList<StreamingPlatformId> StreamingPlatformIds => _streamingPlatfomIds.AsReadOnly();
+    public IReadOnlyList<MovieGenre> MovieGenres => _genres.AsReadOnly();
+    public IReadOnlyList<MovieCast> MovieCasts => _cast.AsReadOnly();
+    public IReadOnlyList<MovieCrew> MovieCrews => _crew.AsReadOnly();
+    public IReadOnlyList<StreamingPlatform> StreamingPlatforms => _streamingPlatfoms.AsReadOnly();
 
     public Movie(
         MovieId movieId,
@@ -62,21 +62,21 @@ public class Movie : AggregateRoot<MovieId>
             DateTime.Now);
     }
 
-    public void AddCastMember(MovieCastId castId) => _castIds.Add(castId);
+    public void AddCastMember(MovieCast cast) => _cast.Add(cast);
 
-    public void RemoveCastMember(MovieCastId castId) => _castIds.Remove(castId);
+    public void RemoveCastMember(MovieCast cast) => _cast.Remove(cast);
 
-    public void AddCrewMember(MovieCrewId crewId) => _crewIds.Add(crewId);
+    public void AddCrewMember(MovieCrew crewId) => _crew.Add(crewId);
 
-    public void RemoveCrewMember(MovieCrewId crewId) => _crewIds.Remove(crewId);
+    public void RemoveCrewMember(MovieCrew crew) => _crew.Remove(crew);
 
-    public void AddGenre(MovieGenreId genreId) => _genreIds.Add(genreId);
+    public void AddGenre(MovieGenre genre) => _genres.Add(genre);
 
-    public void RemoveGenre(MovieGenreId genreId) => _genreIds.Remove(genreId);
+    public void RemoveGenre(MovieGenre genre) => _genres.Remove(genre);
 
-    public void AddStreamingPlatform(StreamingPlatformId platformId) => _streamingPlatfomIds.Add(platformId);
+    public void AddStreamingPlatform(StreamingPlatform platform) => _streamingPlatfoms.Add(platform);
 
-    public void RemoveStreamingPlatform(StreamingPlatformId platformId) => _streamingPlatfomIds.Remove(platformId);
+    public void RemoveStreamingPlatform(StreamingPlatform platform) => _streamingPlatfoms.Remove(platform);
 
     public void UpdateRating(decimal newRating, int totalRatings)
     {
