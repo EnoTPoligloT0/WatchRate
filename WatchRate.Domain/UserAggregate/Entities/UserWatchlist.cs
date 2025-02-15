@@ -10,6 +10,7 @@ public class UserWatchlist : Entity<UserWatchlistId>
     public MovieId MovieId { get; private set; }
     public DateTime CreatedDateTime { get; private set; }
 
+    private UserWatchlist() { }
     private UserWatchlist(UserWatchlistId userWatchlistId, MovieId movieId, DateTime createdDateTime)
     : base(userWatchlistId)
     {

@@ -21,6 +21,7 @@ public class User : AggregateRoot<UserId>
     public IReadOnlyList<UserFavorite> UserFavorites => _userFavorites.AsReadOnly();
     public IReadOnlyList<UserRating> UserRatings => _userRatings.AsReadOnly();
 
+    private User() { }
     private User(UserId userId,
         string email,
         string userName,

@@ -8,6 +8,7 @@ public class StreamingPlatform : Entity<StreamingPlatformId>
     public string Name { get; set; }
     public string Url { get; set; }
 
+    private StreamingPlatform() { }
     private StreamingPlatform(StreamingPlatformId streamingPlatformId, string name, string url)
         : base(streamingPlatformId)
     {
