@@ -6,7 +6,6 @@ using WatchRate.Domain.UserAggregate.ValueObjects;
 
 namespace WatchRate.Infrastucture.Persistance.Configurations;
 
-
 public class UserConfigurations : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
@@ -23,7 +22,7 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
 
         // PK
         builder.HasKey(x => x.Id);
-
+        
         // ID
         builder.Property(x => x.Id)
             .ValueGeneratedNever()
@@ -35,7 +34,7 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
         builder.Property(x => x.Email)
             .IsRequired()
             .HasMaxLength(320);
-
+        
         builder.HasIndex(x => x.Email)
             .IsUnique();
 
@@ -43,7 +42,7 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
         builder.Property(x => x.UserName)
             .IsRequired()
             .HasMaxLength(50);
-
+        
         builder.HasIndex(x => x.UserName)
             .IsUnique();
 
@@ -58,8 +57,6 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
 
         // Timestamps
         builder.Property(x => x.CreatedDateTime)
-            .IsRequired();
-        builder.Property(x => x.CreatedDate)
             .IsRequired();
     }
 
@@ -87,7 +84,7 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
 
             wb.Property(w => w.CreatedDateTime)
                 .IsRequired();
-
+            
             wb.HasIndex("MovieId", "UserId")
                 .IsUnique();
         });
@@ -120,9 +117,6 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
 
             fb.Property(f => f.AddedDateTime)
                 .IsRequired();
-
-            fb.HasIndex("MovieId", "UserId")
-                .IsUnique();
         });
 
         builder.Metadata.FindNavigation(nameof(User.UserFavorites))!
@@ -151,9 +145,7 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
                     id => id.Value,
                     value => MovieId.Create(value));
 
-            rb.Property(r => r.Value)
-                .IsRequired()
-                .HasColumnType("tinyint");
+            rb.Property(r => r.Value);
 
             rb.Property(r => r.Review)
                 .HasMaxLength(2000);
@@ -162,9 +154,6 @@ public class UserConfigurations : IEntityTypeConfiguration<User>
                 .IsRequired();
 
             rb.Property(r => r.UpdatedDateTime);
-
-            rb.HasIndex("MovieId", "UserId")
-                .IsUnique();
         });
 
         builder.Metadata.FindNavigation(nameof(User.UserRatings))!
