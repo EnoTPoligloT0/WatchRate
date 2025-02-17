@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchRate.Domain.Common.Attributes;
 using WatchRate.Domain.Common.Models;
 
-namespace WatchRate.Infrastucture.Persistance.Extensions;
+namespace WatchRate.Infrastucture.Persistence.Extensions;
 
 public static class ModelBuilderExtensions
 {

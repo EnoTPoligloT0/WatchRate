@@ -5,7 +5,7 @@ using WatchRate.Domain.MovieAggregate.ValueObjects;
 using WatchRate.Domain.PersonAggregate.ValueObjects;
 using WatchRate.Domain.StreamingAggregate.ValueObjects;
 
-namespace WatchRate.Infrastucture.Persistance.Configurations;
+namespace WatchRate.Infrastucture.Persistence.Configurations;
 
 public class MovieConfigurations : IEntityTypeConfiguration<Movie>
 {

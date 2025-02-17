@@ -6,9 +6,9 @@ using WatchRate.Domain.PersonAggregate;
 using WatchRate.Domain.StreamingAggregate;
 using WatchRate.Domain.UserAggregate;
 using WatchRate.Domain.UserAggregate.Entities;
-using WatchRate.Infrastucture.Persistance.Extensions;
+using WatchRate.Infrastucture.Persistence.Extensions;
 
-namespace WatchRate.Infrastucture.Persistance;
+namespace WatchRate.Infrastucture.Persistence;
 
 public class WatchRateDbContext : DbContext
 {

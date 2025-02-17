@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WatchRate.Infrastucture.Persistance;
 using Microsoft.Extensions.Configuration;
+using WatchRate.Infrastucture.Persistence;
 
 namespace WatchRate.Infrastucture;
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WatchRate.Domain.PersonAggregate;
 using WatchRate.Domain.PersonAggregate.ValueObjects;
 
-namespace WatchRate.Infrastucture.Persistance.Configurations;
+namespace WatchRate.Infrastucture.Persistence.Configurations;
 
 public class PersonConfiguration : IEntityTypeConfiguration<Person>
 {
