@@ -32,8 +32,6 @@ public class Movie : AggregateRoot<MovieId>
     public IReadOnlyList<MovieCrew> MovieCrews => _movieCrews.AsReadOnly();
     public IReadOnlyList<StreamingPlatform> StreamingPlatforms => _streamingPlatforms.AsReadOnly();
 
-    private Movie() { }
-
     private Movie(
         MovieId movieId,
         string title,
@@ -82,4 +80,11 @@ public class Movie : AggregateRoot<MovieId>
         AverageRating = newRating;
         TotalRatings = totalRatings;
     }
-}
+    
+#pragma warning disable CS8618
+    private Movie() 
+#pragma warning restore CS8618
+    {
+    }
+}    
+
