@@ -12,6 +12,7 @@ public class UserRating : Entity<UserRatingId>
     public DateTime CreatedDateTime { get; private set; }
     public DateTime? UpdatedDateTime { get; private set; }
 
+    private UserRating() { }
     private UserRating(UserRatingId userRatingId, MovieId movieId, int? value, string? review, DateTime createdDateTime, DateTime? updatedDateTime)
     : base(userRatingId)
     {

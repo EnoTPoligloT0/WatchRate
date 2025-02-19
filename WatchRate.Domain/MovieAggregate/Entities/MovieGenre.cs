@@ -6,7 +6,8 @@ namespace WatchRate.Domain.MovieAggregate;
 public class MovieGenre : Entity<MovieGenreId>
 {
     public string Name { get; set; }
-
+    
+    private MovieGenre() { }
     private MovieGenre(MovieGenreId movieGenreId, string name) 
         : base(movieGenreId)
     {

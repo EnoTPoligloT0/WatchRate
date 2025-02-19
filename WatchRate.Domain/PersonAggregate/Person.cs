@@ -14,6 +14,7 @@ public class Person : AggregateRoot<PersonId>
     public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
 
+    private Person(){}
     private Person(
         PersonId id,
         string firstName,

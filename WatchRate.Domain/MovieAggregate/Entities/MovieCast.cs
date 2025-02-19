@@ -9,6 +9,7 @@ public class MovieCast : Entity<MovieCastId>
     public string? Character { get; set; }
     public string? Order { get; set; }
 
+    private MovieCast() { }
     private MovieCast(MovieCastId movieCastId, PersonId personId, string? character, string? order)
         : base(movieCastId)
     {

@@ -6,9 +6,9 @@ namespace WatchRate.Domain.UserAggregate;
 
 public class User : AggregateRoot<UserId>
 {
-    private readonly List<UserWatchlistId> _userWatchlistIds = new();
-    private readonly List<UserFavoriteId> _userFavoriteIds = new();
-    private readonly List<UserRatingId> _userRatingIds = new();
+    private readonly List<UserWatchlist> _userWatchlists = new();
+    private readonly List<UserFavorite> _userFavorites = new();
+    private readonly List<UserRating> _userRatings = new();
 
     public string Email { get; set; }
     public string UserName { get; set; }
@@ -17,10 +17,11 @@ public class User : AggregateRoot<UserId>
     public DateTime CreatedDateTime { get; set; }
     public DateTime CreatedDate { get; set; }
 
-    public IReadOnlyList<UserWatchlistId> UserWatchlistIds => _userWatchlistIds.AsReadOnly();
-    public IReadOnlyList<UserFavoriteId> UserFavoriteIds => _userFavoriteIds.AsReadOnly();
-    public IReadOnlyList<UserRatingId> UserRatingIds => _userRatingIds.AsReadOnly();
+    public IReadOnlyList<UserWatchlist> UserWatchlists => _userWatchlists.AsReadOnly();
+    public IReadOnlyList<UserFavorite> UserFavorites => _userFavorites.AsReadOnly();
+    public IReadOnlyList<UserRating> UserRatings => _userRatings.AsReadOnly();
 
+    private User() { }
     private User(UserId userId,
         string email,
         string userName,
@@ -42,5 +43,27 @@ public class User : AggregateRoot<UserId>
     {
         return new User(UserId.CreateUnique(), email, userName, passwordHash, profilePictureUrl, DateTime.Now,
             DateTime.Now);
+    }
+
+    public void AddWatchlistItem(UserWatchlist item) => _userWatchlists.Add(item);
+
+    public void RemoveWatchlistItem(UserWatchlist item) => _userWatchlists.Remove(item);
+
+    public void AddFavorite(UserFavorite favorite) => _userFavorites.Add(favorite);
+
+    public void RemoveFavorite(UserFavorite favorite) => _userFavorites.Remove(favorite);
+
+    public void AddUserRating(UserRating rating) => _userRatings.Add(rating);
+
+    public void RemoveUserRating(UserRating rating) => _userRatings.Remove(rating);
+
+    public void UpdateUserRating(UserRating updatedRating)
+    {
+        var existingRating = _userRatings.FirstOrDefault(r => r.Id.Equals(updatedRating.Id));
+        if (existingRating != null)
+        {
+            _userRatings.Remove(existingRating);
+            _userRatings.Add(updatedRating);
+        }
     }
 }

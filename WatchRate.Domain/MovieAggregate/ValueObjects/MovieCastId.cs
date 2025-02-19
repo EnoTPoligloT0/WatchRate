@@ -1,9 +1,10 @@
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchRate.Domain.Common.Attributes;
 using WatchRate.Domain.Common.Models;
 
 namespace WatchRate.Domain.MovieAggregate;
 
-[EfCoreValueConverter(typeof(MovieCastId))]
+[EfCoreValueConverter(typeof(MovieCastIdValueConverter))]
 public class MovieCastId : ValueObject, IEntityId<MovieCastId, Guid> 
 {
     public Guid Value { get; }
@@ -21,4 +22,12 @@ public class MovieCastId : ValueObject, IEntityId<MovieCastId, Guid>
         yield return Value;
     }
 
+    public class MovieCastIdValueConverter : ValueConverter<MovieCastId, Guid>
+    {
+        public MovieCastIdValueConverter()
+            : base(
+                id => id.Value,
+                value => Create(value)
+            ) { }
+    }
 }

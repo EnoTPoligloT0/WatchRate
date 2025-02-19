@@ -10,6 +10,7 @@ public class MovieCrew : Entity<MovieCrewId>
     public string Role { get; set; }
     public string? Department { get; set; }
 
+    private MovieCrew() { }
     private MovieCrew(MovieCrewId movieCrewId, PersonId personId, string role, string department)
         : base(movieCrewId)
     {

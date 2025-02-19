@@ -1,0 +1,27 @@
+﻿version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: watchrate-db
+    environment:
+      POSTGRES_DB: WatchRateDb
+      POSTGRES_USER: postgresuser
+      POSTGRES_PASSWORD: postgressuperstrong
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - watchrate-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  watchrate-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

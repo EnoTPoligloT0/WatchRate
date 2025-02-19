@@ -10,6 +10,7 @@ public class UserFavorite : Entity<UserFavoriteId>
     
     public DateTime AddedDateTime { get; private set; }
 
+    private UserFavorite() { }
     private UserFavorite(UserFavoriteId userFavoriteId , MovieId movieId, DateTime addedDateTime)
     : base(userFavoriteId)
     {
