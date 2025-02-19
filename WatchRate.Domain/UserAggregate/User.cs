@@ -44,4 +44,26 @@ public class User : AggregateRoot<UserId>
         return new User(UserId.CreateUnique(), email, userName, passwordHash, profilePictureUrl, DateTime.Now,
             DateTime.Now);
     }
+
+    public void AddWatchlistItem(UserWatchlist item) => _userWatchlists.Add(item);
+
+    public void RemoveWatchlistItem(UserWatchlist item) => _userWatchlists.Remove(item);
+
+    public void AddFavorite(UserFavorite favorite) => _userFavorites.Add(favorite);
+
+    public void RemoveFavorite(UserFavorite favorite) => _userFavorites.Remove(favorite);
+
+    public void AddUserRating(UserRating rating) => _userRatings.Add(rating);
+
+    public void RemoveUserRating(UserRating rating) => _userRatings.Remove(rating);
+
+    public void UpdateUserRating(UserRating updatedRating)
+    {
+        var existingRating = _userRatings.FirstOrDefault(r => r.Id.Equals(updatedRating.Id));
+        if (existingRating != null)
+        {
+            _userRatings.Remove(existingRating);
+            _userRatings.Add(updatedRating);
+        }
+    }
 }
