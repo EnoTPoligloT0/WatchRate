@@ -9,5 +9,5 @@ public interface IUserRatingRepository
     Task<IEnumerable<UserRating>> GetByUserId(UserId userId);
     Task AddRating(UserId userId, MovieId movieId, int value, string? review);
     Task UpdateRating(UserId userId, MovieId movieId, int value, string? review);
-    Task RemoveRating(UserId userId, MovieId movieId);
+    Task DeleteRating(UserId userId, MovieId movieId);
 } 

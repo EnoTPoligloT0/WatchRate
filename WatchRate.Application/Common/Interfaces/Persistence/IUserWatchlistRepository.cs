@@ -8,5 +8,5 @@ public interface IUserWatchlistRepository
 {
     Task<IEnumerable<UserWatchlist>> GetByUserId(UserId userId);
     Task AddToWatchlist(UserId userId, MovieId movieId);
-    Task RemoveFromWatchlist(UserId userId, MovieId movieId);
+    Task DeleteFromWatchlist(UserId userId, MovieId movieId);
 } 
