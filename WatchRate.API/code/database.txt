@@ -1,0 +1,209 @@
+create table "__EFMigrationsHistory"
+(
+    "MigrationId"    varchar(150) not null
+        constraint "PK___EFMigrationsHistory"
+            primary key,
+    "ProductVersion" varchar(32)  not null
+);
+
+alter table "__EFMigrationsHistory"
+    owner to postgresuser;
+
+create table "Movies"
+(
+    "Id"              uuid                     not null
+        constraint "PK_Movies"
+            primary key,
+    "ImdbId"          varchar(20),
+    "Title"           varchar(200)             not null,
+    "Description"     varchar(2000)            not null,
+    "Year"            smallint                 not null,
+    "Runtime"         smallint,
+    "MaturityRating"  varchar(10),
+    "AverageRating"   numeric(3, 1)            not null,
+    "TotalRatings"    integer,
+    "PosterUrl"       varchar(500),
+    "BackdropUrl"     varchar(500),
+    "TrailerUrl"      varchar(500),
+    "CreatedDateTime" timestamp with time zone not null,
+    "UpdatedDateTime" timestamp with time zone
+);
+
+alter table "Movies"
+    owner to postgresuser;
+
+create table "Person"
+(
+    "Id"              uuid                     not null
+        constraint "PK_Person"
+            primary key,
+    "FirstName"       text                     not null,
+    "LastName"        text                     not null,
+    "Biography"       text,
+    "BirthDate"       text                     not null,
+    "BirthPlace"      text                     not null,
+    "ProfileImageUrl" text,
+    "CreatedDateTime" timestamp with time zone not null,
+    "UpdatedDateTime" timestamp with time zone not null
+);
+
+alter table "Person"
+    owner to postgresuser;
+
+create table "Users"
+(
+    "Id"                uuid                     not null
+        constraint "PK_Users"
+            primary key,
+    "Email"             varchar(320)             not null,
+    "UserName"          varchar(50)              not null,
+    "PasswordHash"      varchar(500)             not null,
+    "ProfilePictureUrl" varchar(500),
+    "CreatedDateTime"   timestamp with time zone not null,
+    "CreatedDate"       timestamp with time zone not null,
+    "UpdatedDateTime"   timestamp with time zone not null
+);
+
+alter table "Users"
+    owner to postgresuser;
+
+create table "MovieCast"
+(
+    "Id"        uuid not null,
+    "MovieId"   uuid not null
+        constraint "FK_MovieCast_Movies_MovieId"
+            references "Movies"
+            on delete cascade,
+    "PersonId"  uuid not null,
+    "Character" varchar(100),
+    "Order"     text,
+    constraint "PK_MovieCast"
+        primary key ("Id", "MovieId")
+);
+
+alter table "MovieCast"
+    owner to postgresuser;
+
+create index "IX_MovieCast_MovieId"
+    on "MovieCast" ("MovieId");
+
+create index "IX_MovieCast_PersonId"
+    on "MovieCast" ("PersonId");
+
+create table "MovieCrew"
+(
+    "Id"         uuid        not null,
+    "MovieId"    uuid        not null
+        constraint "FK_MovieCrew_Movies_MovieId"
+            references "Movies"
+            on delete cascade,
+    "PersonId"   uuid        not null,
+    "Role"       varchar(50) not null,
+    "Department" varchar(50),
+    constraint "PK_MovieCrew"
+        primary key ("Id", "MovieId")
+);
+
+alter table "MovieCrew"
+    owner to postgresuser;
+
+create index "IX_MovieCrew_MovieId"
+    on "MovieCrew" ("MovieId");
+
+create table "MovieGenres"
+(
+    "Id"      uuid        not null,
+    "MovieId" uuid        not null
+        constraint "FK_MovieGenres_Movies_MovieId"
+            references "Movies"
+            on delete cascade,
+    "Name"    varchar(50) not null,
+    constraint "PK_MovieGenres"
+        primary key ("Id", "MovieId")
+);
+
+alter table "MovieGenres"
+    owner to postgresuser;
+
+create index "IX_MovieGenres_MovieId"
+    on "MovieGenres" ("MovieId");
+
+create table "StreamingPlatforms"
+(
+    "Id"      uuid not null,
+    "MovieId" uuid not null
+        constraint "FK_StreamingPlatforms_Movies_MovieId"
+            references "Movies"
+            on delete cascade,
+    "Name"    text not null,
+    "Url"     text not null,
+    constraint "PK_StreamingPlatforms"
+        primary key ("Id", "MovieId")
+);
+
+alter table "StreamingPlatforms"
+    owner to postgresuser;
+
+create index "IX_StreamingPlatforms_MovieId"
+    on "StreamingPlatforms" ("MovieId");
+
+create table "UserFavorites"
+(
+    "Id"            uuid                     not null,
+    "UserId"        uuid                     not null
+        constraint "FK_UserFavorites_Users_UserId"
+            references "Users"
+            on delete cascade,
+    "MovieId"       uuid                     not null,
+    "AddedDateTime" timestamp with time zone not null,
+    constraint "PK_UserFavorites"
+        primary key ("Id", "UserId")
+);
+
+alter table "UserFavorites"
+    owner to postgresuser;
+
+create index "IX_UserFavorites_UserId"
+    on "UserFavorites" ("UserId");
+
+create table "UserRatings"
+(
+    "Id"              uuid                     not null,
+    "UserId"          uuid                     not null
+        constraint "FK_UserRatings_Users_UserId"
+            references "Users"
+            on delete cascade,
+    "MovieId"         uuid                     not null,
+    "Value"           integer,
+    "Review"          varchar(2000),
+    "CreatedDateTime" timestamp with time zone not null,
+    "UpdatedDateTime" timestamp with time zone,
+    constraint "PK_UserRatings"
+        primary key ("Id", "UserId")
+);
+
+alter table "UserRatings"
+    owner to postgresuser;
+
+create index "IX_UserRatings_UserId"
+    on "UserRatings" ("UserId");
+
+create table "UserWatchlist"
+(
+    "Id"              uuid                     not null
+        constraint "PK_UserWatchlist"
+            primary key,
+    "MovieId"         uuid                     not null,
+    "CreatedDateTime" timestamp with time zone not null,
+    "UserId"          uuid                     not null
+        constraint "FK_UserWatchlist_Users_UserId"
+            references "Users"
+            on delete cascade
+);
+
+alter table "UserWatchlist"
+    owner to postgresuser;
+
+create index "IX_UserWatchlist_UserId"
+    on "UserWatchlist" ("UserId");
+
