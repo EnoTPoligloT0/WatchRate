@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using WatchRate.Infrastucture.Persistance;
 using WatchRate.Infrastucture.Persistence;
 
 #nullable disable
@@ -92,11 +91,9 @@ namespace WatchRate.Infrastucture.Persistance.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("BirthDate")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("BirthPlace")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -155,6 +152,12 @@ namespace WatchRate.Infrastucture.Persistance.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("Users", (string)null);
                 });
@@ -344,18 +347,21 @@ namespace WatchRate.Infrastucture.Persistance.Migrations
                             b1.Property<Guid>("Id")
                                 .HasColumnType("uuid");
 
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
                             b1.Property<DateTime>("CreatedDateTime")
                                 .HasColumnType("timestamp with time zone");
 
                             b1.Property<Guid>("MovieId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.HasKey("Id");
+                            b1.HasKey("Id", "UserId");
 
                             b1.HasIndex("UserId");
+
+                            b1.HasIndex("MovieId", "UserId")
+                                .IsUnique();
 
                             b1.ToTable("UserWatchlist", (string)null);
 
