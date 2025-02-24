@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchRate.Contracts", "Watc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchRate.Domain", "WatchRate.Domain\WatchRate.Domain.csproj", "{B7285D6C-4526-45A9-A6D8-E6ACCDCEA385}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchRate.Infrastucture", "WatchRate.Infrastucture\WatchRate.Infrastucture.csproj", "{A4701D65-883D-4840-95B8-CBF92F1ACF24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchRate.Infrastructure", "WatchRate.Infrastructure\WatchRate.Infrastructure.csproj", "{A4701D65-883D-4840-95B8-CBF92F1ACF24}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchRate.Tests", "WatchRate.Tests\WatchRate.Tests.csproj", "{7E4EF7DC-E951-4356-BBEA-128B5F1A4A13}"
 EndProject
