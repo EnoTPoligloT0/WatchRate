@@ -81,6 +81,14 @@ public class Movie : AggregateRoot<MovieId>
         TotalRatings = totalRatings;
     }
     
+    public void UpdateDetails(string title, string description, short year)
+    {
+        Title = title;
+        Description = description;
+        Year = year;
+        UpdatedDateTime = DateTime.UtcNow;
+    }
+    
 #pragma warning disable CS8618
     private Movie() 
 #pragma warning restore CS8618
