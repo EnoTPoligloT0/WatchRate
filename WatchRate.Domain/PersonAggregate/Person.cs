@@ -24,7 +24,7 @@ public class Person : AggregateRoot<PersonId>
         string? birthPlace,
         string? profileImageUrl,
         DateTime createdDateTime,
-        DateTime updatedDateTime)
+        DateTime updatedDateTime) : base(id)
     {
         FirstName = firstName;
         LastName = lastName;
