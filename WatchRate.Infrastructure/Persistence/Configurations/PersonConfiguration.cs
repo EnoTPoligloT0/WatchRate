@@ -26,12 +26,10 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
             .IsRequired();
         
         builder.Property(x => x.Biography);
-        
-        builder.Property(x => x.BirthDate)
-            .IsRequired();
-        
-        builder.Property(x => x.BirthPlace)
-            .IsRequired();
+
+        builder.Property(x => x.BirthDate);
+
+        builder.Property(x => x.BirthPlace);
         
         builder.Property(x => x.ProfileImageUrl);
         
